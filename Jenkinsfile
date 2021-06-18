@@ -5,6 +5,11 @@ pipeline {
         //indicates to Jenkins that I want to use gradle in Jenkinsfile
         gradle '7.0.2'
     }
+    
+    triggers { 
+        pollSCM('H/3 * * * 1-5') 
+    }
+    
     stages {
         stage('Build') {
             steps {
