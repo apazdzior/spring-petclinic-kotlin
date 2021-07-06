@@ -1,10 +1,8 @@
-FROM gradle:4.7.0-jdk8-alpine AS build
+FROM gradle:7.0.2-jdk8 AS builder
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build
+RUN gradle clean build 
 
 FROM openjdk:8-jre-slim
-EXPOSE 8080
-COPY --from=build /home/gradle/src/build/libs/spring-petclinic-kotlin.jar /app/
-RUN bash -c 'touch /app/spring-petclinic-kotlin.jar'
-ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/spring-petclinic-kotlin.jar"]
+COPY --from=builder /home/gradle/src/build/libs/spring-petclinic-kotlin-2.4.0.jar /Applications/
+ENTRYPOINT ["java", "-jar","/Applications/spring-petclinic-kotlin-2.4.0.jar"]
